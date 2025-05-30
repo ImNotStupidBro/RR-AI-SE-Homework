@@ -1,25 +1,24 @@
 # NVIDIA Earnings Transcripts
 
-This project is a web-based application that identifies and retrieves the full transcripts of NVIDIA's earning calls for the last four quarters. It is built using React and TypeScript.
+This project is a Python-based application that identifies and retrieves the full transcripts of NVIDIA's earning calls for the last four quarters. It uses SQLAlchemy for database management and Flask for the web framework.
 
 ## Project Structure
 
 ```
 nvidia-earnings-transcripts
 ├── src
-│   ├── components
-│   │   └── TranscriptList.tsx
-│   ├── pages
-│   │   └── Home.tsx
+│   ├── db
+│   │   └── database.py
 │   ├── services
-│   │   └── transcriptService.ts
-│   └── types
-│       └── index.ts
-├── public
-│   └── index.html
-├── package.json
-├── tsconfig.json
-└── README.md
+│   │   └── transcript_service.py
+│   ├── models
+│   │   └── transcript.py
+│   ├── main.py
+│   └── utils
+│       └── fetch_transcripts.py
+├── requirements.txt
+├── README.md
+└── alembic.ini
 ```
 
 ## Setup Instructions
@@ -32,16 +31,16 @@ nvidia-earnings-transcripts
 
 2. **Install dependencies:**
    ```
-   npm install
+   pip install -r requirements.txt
    ```
 
 3. **Run the application:**
    ```
-   npm start
+   python src/main.py
    ```
 
 4. **Open your browser:**
-   Navigate to `http://localhost:3000` to view the application.
+   Navigate to `http://localhost:5000` to view the application.
 
 ## Usage
 
