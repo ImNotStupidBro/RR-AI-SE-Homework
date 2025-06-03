@@ -6,9 +6,7 @@
 <body>
     <h1>NVIDIA Earnings Call Transcripts (Last 4 Quarters)</h1>
     {% for transcript in transcripts %}
-        <h2>{{ transcript.quarter }} - {{ transcript.year }}</h2>
-        <a href="{{ transcript.source_url }}" target="_blank">Source</a>
-        <pre style="white-space: pre-wrap;">{{ transcript.content[:1000] }}{% if transcript.content|length > 1000 %}...{% endif %}</pre>
+        <pre style="white-space: pre-wrap;">{{ transcript.content }}</pre>
         <hr>
     {% else %}
         <p>No transcripts found.</p>
