@@ -6,7 +6,12 @@
 <body>
     <h1>NVIDIA Earnings Call Transcripts (Last 4 Quarters)</h1>
     {% for transcript in transcripts %}
-        <pre style="white-space: pre-wrap;">{{ transcript.content }}</pre>
+        <details>
+            <summary>
+                Transcript from {{ transcript.date.strftime('%b %d, %Y') if transcript.date else 'Unknown Date' }}
+            </summary>
+            <pre style="white-space: pre-wrap;">{{ transcript.content }}</pre>
+        </details>
         <hr>
     {% else %}
         <p>No transcripts found.</p>
