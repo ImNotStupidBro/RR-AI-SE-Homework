@@ -26,35 +26,33 @@ def delete_transcript(transcript_id: int, db: Session):
     return False
 
 def fetch_and_store_transcripts():
-    # Example: Scrape from Seeking Alpha (update selectors as needed)
-    base_url = "https://seekingalpha.com"
-    nvidia_earnings_url = f"{base_url}/symbol/NVDA/earnings/transcripts"
+    base_url = "https://www.fool.com"
+    nvidia_earnings_url = "https://www.fool.com/quote/nasdaq/nvda/#quote-earnings-transcripts"
     session = next(get_db_session())
 
     response = requests.get(nvidia_earnings_url)
     soup = BeautifulSoup(response.text, "html.parser")
 
-    # Find transcript links (update selector as needed)
-    transcript_links = soup.select("a[href*='/earnings-call-transcript']")[:4]
+    # The transcripts are loaded dynamically via JavaScript, so requests/BeautifulSoup won't see them.
+    # You may need to use Selenium or another tool for dynamic content.
+    # For demonstration, let's try to find links in the static HTML:
+    transcript_links = soup.select("a[href*='earnings/call-transcript']")
+    print(f"Found {len(transcript_links)} transcript links")
 
-    for link in transcript_links:
-        transcript_url = base_url + link['href']
+    for link in transcript_links[:4]:
+        transcript_url = link['href']
+        if not transcript_url.startswith("http"):
+            transcript_url = base_url + transcript_url
+        print(f"Transcript link: {transcript_url}")  # <-- Print each link
         transcript_resp = requests.get(transcript_url)
         transcript_soup = BeautifulSoup(transcript_resp.text, "html.parser")
 
-        # Extract quarter/year and content (update selectors as needed)
-        title = transcript_soup.find("h1").get_text(strip=True)
-        content_div = transcript_soup.find("div", {"data-test-id": "article-content"})
+        # Try to extract the main content
+        content_div = transcript_soup.find("div", class_="article-content")
         content = content_div.get_text(separator="\n", strip=True) if content_div else ""
 
-        # Check if already in DB
-        exists = session.query(Transcript).filter_by(source_url=transcript_url).first()
-        if not exists:
-            transcript = Transcript(
-                quarter=title,  # You may want to parse this further
-                year=title,     # You may want to parse this further
-                content=content,
-                source_url=transcript_url
-            )
+        # Store only the content
+        if content:
+            transcript = Transcript(content=content)
             session.add(transcript)
             session.commit()
